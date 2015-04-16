@@ -284,4 +284,10 @@ private[akka] object ActorProcessorFactory {
     impl ! ExposedPublisher(p.asInstanceOf[ActorPublisher[Any]])
     p
   }
+
+  def supportingMultipleSubscribers[I, O](impl: ActorRef): ActorProcessor[I, O] = {
+    val p = new ActorProcessor[I, O](impl) with SupportingMultipleSubscribers
+    impl ! ExposedPublisher(p.asInstanceOf[ActorPublisher[Any]])
+    p
+  }
 }

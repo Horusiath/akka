@@ -109,7 +109,7 @@ private[akka] object SynchronousIterablePublisher {
  */
 private[akka] final class SynchronousIterablePublisher[T](
   private val iterable: immutable.Iterable[T],
-  private val name: String) extends Publisher[T] {
+  private val name: String) extends Publisher[T] with SupportingMultipleSubscribers {
 
   import SynchronousIterablePublisher.IteratorSubscription
 

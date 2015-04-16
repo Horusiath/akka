@@ -28,6 +28,13 @@ private[akka] object ActorPublisher {
     a
   }
 
+  def supportingMultipleSubscribers[T](impl: ActorRef): ActorPublisher[T] = {
+    val a = new ActorPublisher[T](impl) with SupportingMultipleSubscribers
+    // Resolve cyclic dependency with actor. This MUST be the first message no matter what.
+    impl ! ExposedPublisher(a.asInstanceOf[ActorPublisher[Any]])
+    a
+  }
+
 }
 
 /**
@@ -108,6 +115,11 @@ private[akka] class ActorSubscription[T]( final val impl: ActorRef, final val su
  */
 private[akka] class ActorSubscriptionWithCursor[T](_impl: ActorRef, _subscriber: Subscriber[_ >: T])
   extends ActorSubscription[T](_impl, _subscriber) with SubscriptionWithCursor[T]
+
+/**
+ * INTERNAL API
+ */
+private[akka] trait SupportingMultipleSubscribers
 
 /**
  * INTERNAL API

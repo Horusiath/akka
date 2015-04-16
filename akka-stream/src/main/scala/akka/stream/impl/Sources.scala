@@ -104,7 +104,7 @@ private[akka] final class FutureSource[Out](future: Future[Out], val attributes:
       case None ⇒
         val actorMaterializer = ActorFlowMaterializer.downcast(context.materializer)
         val effectiveSettings = actorMaterializer.effectiveSettings(context.effectiveAttributes)
-        (ActorPublisher[Out](actorMaterializer.actorOf(context,
+        (ActorPublisher.supportingMultipleSubscribers[Out](actorMaterializer.actorOf(context,
           FuturePublisher.props(future, effectiveSettings))), ()) // FIXME this does not need to be an actor
     }
 
